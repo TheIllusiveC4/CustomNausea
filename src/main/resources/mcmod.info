@@ -1,0 +1,16 @@
+[
+{
+  "modid": "customnausea",
+  "name": "Custom Nausea",
+  "description": "Allows modifying the strength of the Nausea screen effect, plus additional options.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["C4"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
