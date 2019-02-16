@@ -4,7 +4,5 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
-## [1.0] - 2018.10.08
-
-## [0.1] - 2018.10.05
-Initial beta release
+## [2.0-pre1] - Unreleased
+Ported to 1.13.2 - Forge 25.0.10

@@ -1,44 +1,45 @@
+/*
+ * Copyright (C) 2018-2019  C4
+ *
+ * This file is part of Custom Nausea, a mod made for Minecraft.
+ *
+ * Custom Nausea is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Custom Nausea is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Custom Nausea.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package c4.customnausea;
 
-import c4.customnausea.core.EventHandlerClient;
+import c4.customnausea.core.EventHandler;
+import c4.customnausea.core.NauseaConfig;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(   modid = CustomNausea.MODID,
-        name = CustomNausea.NAME,
-        version = "@VERSION@",
-        dependencies = "required-after:forge@[14.23.5.2768,)",
-        acceptedMinecraftVersions = "[1.12, 1.13)",
-        certificateFingerprint = "@FINGERPRINT@",
-        clientSideOnly = true)
-public class CustomNausea
-{
+
+@Mod(CustomNausea.MODID)
+public class CustomNausea {
+
     public static final String MODID = "customnausea";
-    public static final String NAME = "Custom Nausea";
 
-    public static Logger logger;
-
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent evt)
-    {
-        logger = evt.getModLog();
+    public CustomNausea() {
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, NauseaConfig.spec);
     }
 
-    @EventHandler
-    public void init(FMLInitializationEvent evt) {
-        MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
-    }
-
-    @EventHandler
-    public void onFingerPrintViolation(FMLFingerprintViolationEvent evt) {
-        FMLLog.log.log(Level.ERROR, "Invalid fingerprint detected! The file " + evt.getSource().getName()
-                + " may have been tampered with. This version will NOT be supported by the author!");
+    private void setupClient(final FMLClientSetupEvent evt) {
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 }
