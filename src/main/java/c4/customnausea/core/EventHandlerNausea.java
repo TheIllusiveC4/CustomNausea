@@ -40,7 +40,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.Random;
 
-public class EventHandler {
+public class EventHandlerNausea {
 
     private static float portalCounter = 0.0f;
     private static float prevPortalCounter = 0.0f;

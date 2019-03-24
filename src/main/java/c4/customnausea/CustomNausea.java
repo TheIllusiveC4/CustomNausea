@@ -19,7 +19,7 @@
 
 package c4.customnausea;
 
-import c4.customnausea.core.EventHandler;
+import c4.customnausea.core.EventHandlerNausea;
 import c4.customnausea.core.NauseaConfig;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -40,6 +40,6 @@ public class CustomNausea {
     }
 
     private void setupClient(final FMLClientSetupEvent evt) {
-        MinecraftForge.EVENT_BUS.register(new EventHandler());
+        MinecraftForge.EVENT_BUS.register(new EventHandlerNausea());
     }
 }

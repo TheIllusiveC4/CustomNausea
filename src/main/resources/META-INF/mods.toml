@@ -1,25 +1,25 @@
 modLoader="javafml"
 loaderVersion="[25,)"
 issueTrackerURL="https://github.com/TheIllusiveC4/CustomNausea/issues"
-displayURL="https://minecraft.curseforge.com/projects/custom-nausea"
-logoFile="customnausea_icon.png"
-authors="C4"
+displayURL="${mod_url}"
+logoFile="${mod_icon}"
+authors="${mod_author}"
 [[mods]]
-modId="customnausea"
-version="${file.jarVersion}"
-displayName="Custom Nausea"
+modId="${mod_id}"
+version="${version}"
+displayName="${mod_name}"
 description='''
-Allows modifying the strength of the Nausea screen effect, plus additional options.
+${mod_description}
 '''
-[[dependencies.comforts]]
+[[dependencies.customnausea]]
     modId="forge"
     mandatory=true
     versionRange="[25,)"
     ordering="NONE"
-    side="BOTH"
-[[dependencies.comforts]]
+    side="CLIENT"
+[[dependencies.customnausea]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.13,1.14)"
     ordering="NONE"
-    side="BOTH"
+    side="CLIENT"
