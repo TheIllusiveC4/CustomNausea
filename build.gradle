@@ -30,7 +30,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                cakechomps {
+                customnausea {
                     source sourceSets.main
                 }
             }
@@ -43,7 +43,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                cakechomps {
+                customnausea {
                     source sourceSets.main
                 }
             }
