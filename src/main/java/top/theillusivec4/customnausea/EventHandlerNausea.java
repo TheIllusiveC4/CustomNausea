@@ -53,7 +53,6 @@ public class EventHandlerNausea {
 
   @SubscribeEvent
   public void onClientTick(TickEvent.ClientTickEvent evt) {
-
     ClientPlayerEntity clientPlayer = Minecraft.getInstance().player;
 
     if (evt.phase != TickEvent.Phase.END || clientPlayer == null) {
