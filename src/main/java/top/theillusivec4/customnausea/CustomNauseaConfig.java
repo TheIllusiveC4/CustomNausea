@@ -39,32 +39,53 @@ public class CustomNauseaConfig {
     Builder builder = new Builder();
 
     {
-      builder.push("Nausea");
+      builder.push(ConfigCategories.NAUSEA.name());
 
-      NAUSEA_MODIFIER = builder.comment("The strength of the Nausea effect")
-                               .translation(CONFIG_PREFIX + "nauseaModifier")
-                               .defineInRange("nauseaModifier", 1.0d, 0.0d,
-                                              10.0d);
-      STUMBLING = builder.comment(
-              "Set to true to activate stumbling movement when nauseous")
-                         .translation(CONFIG_PREFIX + "stumbling").define(
-                      "stumbling", false);
+      NAUSEA_MODIFIER = builder.comment(ConfigProp.NAUSEA_MOD.comment)
+                               .translation(ConfigProp.NAUSEA_MOD.translation)
+                               .defineInRange(ConfigProp.NAUSEA_MOD.path, 1.0d,
+                                              0.0d, 10.0d);
+      STUMBLING = builder.comment(ConfigProp.STUMBLING.comment)
+                         .translation(ConfigProp.STUMBLING.translation)
+                         .define(ConfigProp.STUMBLING.path, false);
 
       builder.pop();
     }
 
     {
-      builder.push("Portal");
+      builder.push(ConfigCategories.PORTAL.name());
 
-      PORTAL_MODIFIER = builder.comment(
-              "The strength of the portal distortion effect").translation(
-              CONFIG_PREFIX + "portalModifier").defineInRange("portalModifier",
-                                                              1.0d, 0.0d,
-                                                              10.0d);
+      PORTAL_MODIFIER = builder.comment(ConfigProp.PORTAL_MOD.comment)
+                               .translation(ConfigProp.PORTAL_MOD.translation)
+                               .defineInRange(ConfigProp.PORTAL_MOD.path, 1.0d,
+                                              0.0d, 10.0d);
 
       builder.pop();
     }
 
     CONFIG_SPEC = builder.build();
+  }
+
+  private enum ConfigCategories {
+    NAUSEA,
+    PORTAL
+  }
+
+  private enum ConfigProp {
+    NAUSEA_MOD("nauseaModifier", "The strength of the Nausea effect"),
+    STUMBLING("stumbling",
+              "Set to true to active stumbling movement when nauseous"),
+    PORTAL_MOD("portalModifier",
+               "The strength of the portal distortion effect");
+
+    final String path;
+    final String translation;
+    final String comment;
+
+    ConfigProp(String path, String comment) {
+      this.path = path;
+      this.translation = CONFIG_PREFIX + path;
+      this.comment = comment;
+    }
   }
 }

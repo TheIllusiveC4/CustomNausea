@@ -70,8 +70,8 @@ public class EventHandlerNausea {
 
     double maxEffectTime = inPortal ? CustomNauseaConfig.PORTAL_MODIFIER.get() :
                            CustomNauseaConfig.NAUSEA_MODIFIER.get();
-    clientPlayer.timeInPortal = (float) Math.min(clientPlayer.timeInPortal,
-                                                 maxEffectTime);
+    clientPlayer.timeInPortal =
+            (float) Math.min(clientPlayer.timeInPortal, maxEffectTime);
     prevPortalCounter = portalCounter;
 
     if (inPortal) {
@@ -97,8 +97,8 @@ public class EventHandlerNausea {
     MovementInput input = evt.getMovementInput();
     PlayerEntity player = evt.getEntityPlayer();
 
-    if (!CustomNauseaConfig.STUMBLING.get() || player.getActivePotionEffect(
-            Effects.NAUSEA) == null) {
+    if (!CustomNauseaConfig.STUMBLING.get() ||
+        player.getActivePotionEffect(Effects.NAUSEA) == null) {
       return;
     }
 
@@ -159,10 +159,12 @@ public class EventHandlerNausea {
     GlStateManager.color4f(1.0F, 1.0F, 1.0F, timeInPortal);
     mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
-    TextureAtlasSprite textureatlassprite =
-            mc.getBlockRendererDispatcher().getBlockModelShapes().getTexture(
-                    Blocks.NETHER_PORTAL.getDefaultState(), mc.world,
-                    mc.player.getPosition());
+    TextureAtlasSprite textureatlassprite = mc.getBlockRendererDispatcher()
+                                              .getBlockModelShapes()
+                                              .getTexture(
+                                                      Blocks.NETHER_PORTAL.getDefaultState(),
+                                                      mc.world,
+                                                      mc.player.getPosition());
     float minU = textureatlassprite.getMinU();
     float minV = textureatlassprite.getMinV();
     float maxU = textureatlassprite.getMaxU();
@@ -171,15 +173,17 @@ public class EventHandlerNausea {
     BufferBuilder bufferbuilder = tessellator.getBuffer();
 
     bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-    bufferbuilder.pos(0.0D, scaledHeight, -90.0D).tex((double) minU,
-                                                      (double) maxV)
+    bufferbuilder.pos(0.0D, scaledHeight, -90.0D)
+                 .tex((double) minU, (double) maxV)
                  .endVertex();
-    bufferbuilder.pos(scaledWidth, scaledHeight, -90.0D).tex((double) maxU,
-                                                             (double) maxV)
+    bufferbuilder.pos(scaledWidth, scaledHeight, -90.0D)
+                 .tex((double) maxU, (double) maxV)
                  .endVertex();
-    bufferbuilder.pos(scaledWidth, 0.0D, -90.0D).tex((double) maxU,
-                                                     (double) minV).endVertex();
-    bufferbuilder.pos(0.0D, 0.0D, -90.0D).tex((double) minU, (double) minV)
+    bufferbuilder.pos(scaledWidth, 0.0D, -90.0D)
+                 .tex((double) maxU, (double) minV)
+                 .endVertex();
+    bufferbuilder.pos(0.0D, 0.0D, -90.0D)
+                 .tex((double) minU, (double) minV)
                  .endVertex();
     tessellator.draw();
 
