@@ -27,11 +27,10 @@ import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 
 public class CustomNauseaConfig {
 
-  public static final ForgeConfigSpec CONFIG_SPEC;
-
-  static final DoubleValue  NAUSEA_MODIFIER;
-  static final DoubleValue  PORTAL_MODIFIER;
-  static final BooleanValue STUMBLING;
+  static final ForgeConfigSpec CONFIG_SPEC;
+  static final DoubleValue     NAUSEA_MODIFIER;
+  static final DoubleValue     PORTAL_MODIFIER;
+  static final BooleanValue    STUMBLING;
 
   private static final String CONFIG_PREFIX =
           "gui." + CustomNausea.MODID + ".config.";
