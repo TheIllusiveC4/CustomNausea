@@ -68,8 +68,8 @@ public class EventHandlerNausea {
       return;
     }
 
-    double maxEffectTime = inPortal ? CustomNauseaConfig.PORTAL_MODIFIER.get() :
-                           CustomNauseaConfig.NAUSEA_MODIFIER.get();
+    double maxEffectTime = inPortal ? CustomNauseaConfig.PORTAL_MODIFIER.get()
+                                    : CustomNauseaConfig.NAUSEA_MODIFIER.get();
     clientPlayer.timeInPortal =
             (float) Math.min(clientPlayer.timeInPortal, maxEffectTime);
     prevPortalCounter = portalCounter;
