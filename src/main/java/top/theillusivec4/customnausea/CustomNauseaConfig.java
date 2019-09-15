@@ -28,12 +28,11 @@ import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 public class CustomNauseaConfig {
 
   static final ForgeConfigSpec CONFIG_SPEC;
-  static final DoubleValue     NAUSEA_MODIFIER;
-  static final DoubleValue     PORTAL_MODIFIER;
-  static final BooleanValue    STUMBLING;
+  static final DoubleValue NAUSEA_MODIFIER;
+  static final DoubleValue PORTAL_MODIFIER;
+  static final BooleanValue STUMBLING;
 
-  private static final String CONFIG_PREFIX =
-          "gui." + CustomNausea.MODID + ".config.";
+  private static final String CONFIG_PREFIX = "gui." + CustomNausea.MODID + ".config.";
 
   static {
     Builder builder = new Builder();
@@ -42,12 +41,12 @@ public class CustomNauseaConfig {
       builder.push(ConfigCategories.NAUSEA.name());
 
       NAUSEA_MODIFIER = builder.comment(ConfigProp.NAUSEA_MOD.comment)
-                               .translation(ConfigProp.NAUSEA_MOD.translation)
-                               .defineInRange(ConfigProp.NAUSEA_MOD.path, 1.0d,
-                                              0.0d, 10.0d);
+          .translation(ConfigProp.NAUSEA_MOD.translation)
+          .defineInRange(ConfigProp.NAUSEA_MOD.path, 1.0d,
+              0.0d, 10.0d);
       STUMBLING = builder.comment(ConfigProp.STUMBLING.comment)
-                         .translation(ConfigProp.STUMBLING.translation)
-                         .define(ConfigProp.STUMBLING.path, false);
+          .translation(ConfigProp.STUMBLING.translation)
+          .define(ConfigProp.STUMBLING.path, false);
 
       builder.pop();
     }
@@ -56,9 +55,9 @@ public class CustomNauseaConfig {
       builder.push(ConfigCategories.PORTAL.name());
 
       PORTAL_MODIFIER = builder.comment(ConfigProp.PORTAL_MOD.comment)
-                               .translation(ConfigProp.PORTAL_MOD.translation)
-                               .defineInRange(ConfigProp.PORTAL_MOD.path, 1.0d,
-                                              0.0d, 10.0d);
+          .translation(ConfigProp.PORTAL_MOD.translation)
+          .defineInRange(ConfigProp.PORTAL_MOD.path, 1.0d,
+              0.0d, 10.0d);
 
       builder.pop();
     }
@@ -73,10 +72,8 @@ public class CustomNauseaConfig {
 
   private enum ConfigProp {
     NAUSEA_MOD("nauseaModifier", "The strength of the Nausea effect"),
-    STUMBLING("stumbling",
-              "Set to true to active stumbling movement when nauseous"),
-    PORTAL_MOD("portalModifier",
-               "The strength of the portal distortion effect");
+    STUMBLING("stumbling", "Set to true to active stumbling movement when nauseous"),
+    PORTAL_MOD("portalModifier", "The strength of the portal distortion effect");
 
     final String path;
     final String translation;

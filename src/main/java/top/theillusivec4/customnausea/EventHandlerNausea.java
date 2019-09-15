@@ -21,6 +21,7 @@
 package top.theillusivec4.customnausea;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import java.util.Random;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -35,21 +36,62 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.MovementInput;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import java.util.Random;
 
 public class EventHandlerNausea {
 
   private static final Random RAND = new Random();
 
-  private static float portalCounter     = 0.0f;
+  private static float portalCounter = 0.0f;
   private static float prevPortalCounter = 0.0f;
-  private static int   stumbleCooldown   = 0;
-  private static int   stumbleStrafe     = 0;
-  private static int   stumbleForward    = 0;
+  private static int stumbleCooldown = 0;
+  private static int stumbleStrafe = 0;
+  private static int stumbleForward = 0;
+
+  private static void renderPortal(float timeInPortal) {
+
+    if (timeInPortal < 1.0F) {
+      timeInPortal = timeInPortal * timeInPortal;
+      timeInPortal = timeInPortal * timeInPortal;
+      timeInPortal = timeInPortal * 0.8F + 0.2F;
+    }
+
+    Minecraft mc = Minecraft.getInstance();
+    double scaledHeight = mc.mainWindow.getScaledHeight();
+    double scaledWidth = mc.mainWindow.getScaledWidth();
+
+    GlStateManager.disableAlphaTest();
+    GlStateManager.disableDepthTest();
+    GlStateManager.depthMask(false);
+    GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
+        GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+        GlStateManager.DestFactor.ZERO);
+    GlStateManager.color4f(1.0F, 1.0F, 1.0F, timeInPortal);
+    mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+
+    TextureAtlasSprite textureatlassprite = mc.getBlockRendererDispatcher().getBlockModelShapes()
+        .getTexture(Blocks.NETHER_PORTAL.getDefaultState(), mc.world, mc.player.getPosition());
+    float minU = textureatlassprite.getMinU();
+    float minV = textureatlassprite.getMinV();
+    float maxU = textureatlassprite.getMaxU();
+    float maxV = textureatlassprite.getMaxV();
+    Tessellator tessellator = Tessellator.getInstance();
+    BufferBuilder bufferbuilder = tessellator.getBuffer();
+
+    bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+    bufferbuilder.pos(0.0D, scaledHeight, -90.0D).tex(minU, maxV).endVertex();
+    bufferbuilder.pos(scaledWidth, scaledHeight, -90.0D).tex(maxU, maxV).endVertex();
+    bufferbuilder.pos(scaledWidth, 0.0D, -90.0D).tex(maxU, minV).endVertex();
+    bufferbuilder.pos(0.0D, 0.0D, -90.0D).tex(minU, minV).endVertex();
+    tessellator.draw();
+
+    GlStateManager.depthMask(true);
+    GlStateManager.enableDepthTest();
+    GlStateManager.enableAlphaTest();
+    GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+  }
 
   @SubscribeEvent
   public void onClientTick(TickEvent.ClientTickEvent evt) {
@@ -59,18 +101,16 @@ public class EventHandlerNausea {
       return;
     }
 
-    Boolean inPortal = ObfuscationReflectionHelper.getPrivateValue(Entity.class,
-                                                                   clientPlayer,
-                                                                   "field_71087_bX");
+    Boolean inPortal = ObfuscationReflectionHelper
+        .getPrivateValue(Entity.class, clientPlayer, "field_71087_bX");
 
     if (inPortal == null) {
       return;
     }
 
     double maxEffectTime = inPortal ? CustomNauseaConfig.PORTAL_MODIFIER.get()
-                                    : CustomNauseaConfig.NAUSEA_MODIFIER.get();
-    clientPlayer.timeInPortal =
-            (float) Math.min(clientPlayer.timeInPortal, maxEffectTime);
+        : CustomNauseaConfig.NAUSEA_MODIFIER.get();
+    clientPlayer.timeInPortal = (float) Math.min(clientPlayer.timeInPortal, maxEffectTime);
     prevPortalCounter = portalCounter;
 
     if (inPortal) {
@@ -94,10 +134,10 @@ public class EventHandlerNausea {
   @SubscribeEvent
   public void onMovementInput(InputUpdateEvent evt) {
     MovementInput input = evt.getMovementInput();
-    PlayerEntity player = evt.getEntityPlayer();
+    PlayerEntity player = evt.getPlayer();
 
-    if (!CustomNauseaConfig.STUMBLING.get() ||
-        player.getActivePotionEffect(Effects.NAUSEA) == null) {
+    if (!CustomNauseaConfig.STUMBLING.get()
+        || player.getActivePotionEffect(Effects.NAUSEA) == null) {
       return;
     }
 
@@ -121,74 +161,17 @@ public class EventHandlerNausea {
   @SubscribeEvent
   public void onPortalRender(RenderGameOverlayEvent.Pre evt) {
 
-    if (evt.getType() != RenderGameOverlayEvent.ElementType.PORTAL ||
-        CustomNauseaConfig.PORTAL_MODIFIER.get() == 1.0d) {
+    if (evt.getType() != RenderGameOverlayEvent.ElementType.PORTAL
+        || CustomNauseaConfig.PORTAL_MODIFIER.get() == 1.0d) {
       return;
     }
 
     evt.setCanceled(true);
-    float timeInPortal = prevPortalCounter +
-                         (portalCounter - prevPortalCounter) *
-                         evt.getPartialTicks();
+    float timeInPortal =
+        prevPortalCounter + (portalCounter - prevPortalCounter) * evt.getPartialTicks();
 
     if (timeInPortal > 0.0F) {
       renderPortal(timeInPortal);
     }
-  }
-
-  private static void renderPortal(float timeInPortal) {
-
-    if (timeInPortal < 1.0F) {
-      timeInPortal = timeInPortal * timeInPortal;
-      timeInPortal = timeInPortal * timeInPortal;
-      timeInPortal = timeInPortal * 0.8F + 0.2F;
-    }
-
-    Minecraft mc = Minecraft.getInstance();
-    double scaledHeight = mc.mainWindow.getScaledHeight();
-    double scaledWidth = mc.mainWindow.getScaledWidth();
-
-    GlStateManager.disableAlphaTest();
-    GlStateManager.disableDepthTest();
-    GlStateManager.depthMask(false);
-    GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
-                                     GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                                     GlStateManager.SourceFactor.ONE,
-                                     GlStateManager.DestFactor.ZERO);
-    GlStateManager.color4f(1.0F, 1.0F, 1.0F, timeInPortal);
-    mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-
-    TextureAtlasSprite textureatlassprite = mc.getBlockRendererDispatcher()
-                                              .getBlockModelShapes()
-                                              .getTexture(
-                                                      Blocks.NETHER_PORTAL.getDefaultState(),
-                                                      mc.world,
-                                                      mc.player.getPosition());
-    float minU = textureatlassprite.getMinU();
-    float minV = textureatlassprite.getMinV();
-    float maxU = textureatlassprite.getMaxU();
-    float maxV = textureatlassprite.getMaxV();
-    Tessellator tessellator = Tessellator.getInstance();
-    BufferBuilder bufferbuilder = tessellator.getBuffer();
-
-    bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-    bufferbuilder.pos(0.0D, scaledHeight, -90.0D)
-                 .tex((double) minU, (double) maxV)
-                 .endVertex();
-    bufferbuilder.pos(scaledWidth, scaledHeight, -90.0D)
-                 .tex((double) maxU, (double) maxV)
-                 .endVertex();
-    bufferbuilder.pos(scaledWidth, 0.0D, -90.0D)
-                 .tex((double) maxU, (double) minV)
-                 .endVertex();
-    bufferbuilder.pos(0.0D, 0.0D, -90.0D)
-                 .tex((double) minU, (double) minV)
-                 .endVertex();
-    tessellator.draw();
-
-    GlStateManager.depthMask(true);
-    GlStateManager.enableDepthTest();
-    GlStateManager.enableAlphaTest();
-    GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
   }
 }

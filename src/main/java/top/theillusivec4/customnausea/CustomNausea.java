@@ -34,12 +34,8 @@ public class CustomNausea {
   public static final String MODID = "customnausea";
 
   public CustomNausea() {
-    FMLJavaModLoadingContext.get()
-                            .getModEventBus()
-                            .addListener(this::setupClient);
-    ModLoadingContext.get()
-                     .registerConfig(ModConfig.Type.CLIENT,
-                                     CustomNauseaConfig.CONFIG_SPEC);
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+    ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CustomNauseaConfig.CONFIG_SPEC);
   }
 
   private void setupClient(final FMLClientSetupEvent evt) {
