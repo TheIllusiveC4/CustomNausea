@@ -21,16 +21,16 @@
 package top.theillusivec4.customnausea;
 
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
+import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
 
 public class CustomNauseaConfig {
 
   static final ForgeConfigSpec CONFIG_SPEC;
   static final DoubleValue NAUSEA_MODIFIER;
   static final DoubleValue PORTAL_MODIFIER;
-  static final BooleanValue STUMBLING;
+  static final EnumValue<Stumbling> STUMBLING;
 
   private static final String CONFIG_PREFIX = "gui." + CustomNausea.MODID + ".config.";
 
@@ -42,11 +42,10 @@ public class CustomNauseaConfig {
 
       NAUSEA_MODIFIER = builder.comment(ConfigProp.NAUSEA_MOD.comment)
           .translation(ConfigProp.NAUSEA_MOD.translation)
-          .defineInRange(ConfigProp.NAUSEA_MOD.path, 1.0d,
-              0.0d, 10.0d);
+          .defineInRange(ConfigProp.NAUSEA_MOD.path, 1.0d, 0.0d, 10.0d);
       STUMBLING = builder.comment(ConfigProp.STUMBLING.comment)
           .translation(ConfigProp.STUMBLING.translation)
-          .define(ConfigProp.STUMBLING.path, false);
+          .defineEnum(ConfigProp.STUMBLING.path, Stumbling.DISABLED);
 
       builder.pop();
     }
@@ -56,8 +55,7 @@ public class CustomNauseaConfig {
 
       PORTAL_MODIFIER = builder.comment(ConfigProp.PORTAL_MOD.comment)
           .translation(ConfigProp.PORTAL_MOD.translation)
-          .defineInRange(ConfigProp.PORTAL_MOD.path, 1.0d,
-              0.0d, 10.0d);
+          .defineInRange(ConfigProp.PORTAL_MOD.path, 1.0d, 0.0d, 10.0d);
 
       builder.pop();
     }
@@ -66,14 +64,17 @@ public class CustomNauseaConfig {
   }
 
   private enum ConfigCategories {
-    NAUSEA,
-    PORTAL
+    NAUSEA, PORTAL
+  }
+
+  enum Stumbling {
+    DISABLED, NORMAL, ADVANCED
   }
 
   private enum ConfigProp {
-    NAUSEA_MOD("nauseaModifier", "The strength of the Nausea effect"),
-    STUMBLING("stumbling", "Set to true to active stumbling movement when nauseous"),
-    PORTAL_MOD("portalModifier", "The strength of the portal distortion effect");
+    NAUSEA_MOD("nauseaModifier", "The strength of the Nausea effect"), STUMBLING("stumbling",
+        "NORMAL - Players stumble when moving, ADVANCED - Players stumble even when standing still"), PORTAL_MOD(
+        "portalModifier", "The strength of the portal distortion effect");
 
     final String path;
     final String translation;

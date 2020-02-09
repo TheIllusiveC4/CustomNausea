@@ -39,6 +39,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import top.theillusivec4.customnausea.CustomNauseaConfig.Stumbling;
 
 public class EventHandlerNausea {
 
@@ -132,7 +133,7 @@ public class EventHandlerNausea {
     MovementInput input = evt.getMovementInput();
     PlayerEntity player = evt.getPlayer();
 
-    if (!CustomNauseaConfig.STUMBLING.get()
+    if (CustomNauseaConfig.STUMBLING.get() == Stumbling.DISABLED
         || player.getActivePotionEffect(Effects.NAUSEA) == null) {
       return;
     }
@@ -144,12 +145,13 @@ public class EventHandlerNausea {
       stumbleStrafe = RAND.nextInt(3) - 1;
       stumbleForward = RAND.nextInt(3) - 1;
     }
+    boolean alwaysStumbling = CustomNauseaConfig.STUMBLING.get() == Stumbling.ADVANCED;
 
-    if (input.leftKeyDown || input.rightKeyDown) {
+    if (alwaysStumbling || input.leftKeyDown || input.rightKeyDown) {
       input.moveForward += stumbleForward;
     }
 
-    if (input.forwardKeyDown || input.backKeyDown) {
+    if (alwaysStumbling || input.forwardKeyDown || input.backKeyDown) {
       input.moveStrafe += stumbleStrafe;
     }
   }
