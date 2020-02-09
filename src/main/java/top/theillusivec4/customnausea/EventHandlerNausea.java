@@ -20,7 +20,7 @@
 
 package top.theillusivec4.customnausea;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.Random;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -50,6 +50,7 @@ public class EventHandlerNausea {
   private static int stumbleStrafe = 0;
   private static int stumbleForward = 0;
 
+  @SuppressWarnings("deprecation")
   private static void renderPortal(float timeInPortal) {
 
     if (timeInPortal < 1.0F) {
@@ -59,38 +60,33 @@ public class EventHandlerNausea {
     }
 
     Minecraft mc = Minecraft.getInstance();
-    double scaledHeight = mc.mainWindow.getScaledHeight();
-    double scaledWidth = mc.mainWindow.getScaledWidth();
+    double scaledHeight = mc.getMainWindow().getScaledHeight();
+    double scaledWidth = mc.getMainWindow().getScaledWidth();
 
-    GlStateManager.disableAlphaTest();
-    GlStateManager.disableDepthTest();
-    GlStateManager.depthMask(false);
-    GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
-        GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
-        GlStateManager.DestFactor.ZERO);
-    GlStateManager.color4f(1.0F, 1.0F, 1.0F, timeInPortal);
+    RenderSystem.disableAlphaTest();
+    RenderSystem.disableDepthTest();
+    RenderSystem.depthMask(false);
+    RenderSystem.defaultBlendFunc();
+    RenderSystem.color4f(1.0F, 1.0F, 1.0F, timeInPortal);
     mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-
     TextureAtlasSprite textureatlassprite = mc.getBlockRendererDispatcher().getBlockModelShapes()
-        .getTexture(Blocks.NETHER_PORTAL.getDefaultState(), mc.world, mc.player.getPosition());
-    float minU = textureatlassprite.getMinU();
-    float minV = textureatlassprite.getMinV();
-    float maxU = textureatlassprite.getMaxU();
-    float maxV = textureatlassprite.getMaxV();
+        .getTexture(Blocks.NETHER_PORTAL.getDefaultState());
+    float f = textureatlassprite.getMinU();
+    float f1 = textureatlassprite.getMinV();
+    float f2 = textureatlassprite.getMaxU();
+    float f3 = textureatlassprite.getMaxV();
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder bufferbuilder = tessellator.getBuffer();
-
     bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-    bufferbuilder.pos(0.0D, scaledHeight, -90.0D).tex(minU, maxV).endVertex();
-    bufferbuilder.pos(scaledWidth, scaledHeight, -90.0D).tex(maxU, maxV).endVertex();
-    bufferbuilder.pos(scaledWidth, 0.0D, -90.0D).tex(maxU, minV).endVertex();
-    bufferbuilder.pos(0.0D, 0.0D, -90.0D).tex(minU, minV).endVertex();
+    bufferbuilder.pos(0.0D, scaledHeight, -90.0D).tex(f, f3).endVertex();
+    bufferbuilder.pos(scaledWidth, scaledHeight, -90.0D).tex(f2, f3).endVertex();
+    bufferbuilder.pos(scaledWidth, 0.0D, -90.0D).tex(f2, f1).endVertex();
+    bufferbuilder.pos(0.0D, 0.0D, -90.0D).tex(f, f1).endVertex();
     tessellator.draw();
-
-    GlStateManager.depthMask(true);
-    GlStateManager.enableDepthTest();
-    GlStateManager.enableAlphaTest();
-    GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    RenderSystem.depthMask(true);
+    RenderSystem.enableDepthTest();
+    RenderSystem.enableAlphaTest();
+    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
   }
 
   @SubscribeEvent
