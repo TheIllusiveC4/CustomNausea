@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
-## [2.0](https://github.com/TheIllusiveC4/CustomNausea/compare/a4e6986424c7383042f19de65673f9e6c8b18484...master) - 2019.09.15
+## [2.0.1](https://github.com/TheIllusiveC4/CustomNausea/compare/28091b14bbe819681bc832d3ee3730edae47a912...1.14.x) - 2020.02.09
+### Added
+- Added Always Stumbling config option for stumbling movement even when standing still while nauseous
+
+## [2.0](https://github.com/TheIllusiveC4/CustomNausea/compare/a4e6986424c7383042f19de65673f9e6c8b18484...28091b14bbe819681bc832d3ee3730edae47a912) - 2019.09.15
 ### Changed
 - Updated to Forge RB 1.14.4-28.1.0
 
