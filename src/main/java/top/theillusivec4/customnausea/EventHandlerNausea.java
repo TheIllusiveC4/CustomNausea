@@ -148,12 +148,13 @@ public class EventHandlerNausea {
       stumbleStrafe = RAND.nextInt(3) - 1;
       stumbleForward = RAND.nextInt(3) - 1;
     }
+    boolean alwaysStumbling = CustomNauseaConfig.ALWAYS_STUMBLING.get();
 
-    if (input.leftKeyDown || input.rightKeyDown) {
+    if (alwaysStumbling || input.leftKeyDown || input.rightKeyDown) {
       input.moveForward += stumbleForward;
     }
 
-    if (input.forwardKeyDown || input.backKeyDown) {
+    if (alwaysStumbling || input.forwardKeyDown || input.backKeyDown) {
       input.moveStrafe += stumbleStrafe;
     }
   }

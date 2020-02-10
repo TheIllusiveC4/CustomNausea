@@ -31,6 +31,7 @@ public class CustomNauseaConfig {
   static final DoubleValue NAUSEA_MODIFIER;
   static final DoubleValue PORTAL_MODIFIER;
   static final BooleanValue STUMBLING;
+  static final BooleanValue ALWAYS_STUMBLING;
 
   private static final String CONFIG_PREFIX = "gui." + CustomNausea.MODID + ".config.";
 
@@ -42,11 +43,12 @@ public class CustomNauseaConfig {
 
       NAUSEA_MODIFIER = builder.comment(ConfigProp.NAUSEA_MOD.comment)
           .translation(ConfigProp.NAUSEA_MOD.translation)
-          .defineInRange(ConfigProp.NAUSEA_MOD.path, 1.0d,
-              0.0d, 10.0d);
+          .defineInRange(ConfigProp.NAUSEA_MOD.path, 1.0d, 0.0d, 10.0d);
       STUMBLING = builder.comment(ConfigProp.STUMBLING.comment)
-          .translation(ConfigProp.STUMBLING.translation)
-          .define(ConfigProp.STUMBLING.path, false);
+          .translation(ConfigProp.STUMBLING.translation).define(ConfigProp.STUMBLING.path, false);
+      ALWAYS_STUMBLING = builder.comment(ConfigProp.ALWAYS_STUMBLING.comment)
+          .translation(ConfigProp.ALWAYS_STUMBLING.translation)
+          .define(ConfigProp.ALWAYS_STUMBLING.path, false);
 
       builder.pop();
     }
@@ -56,8 +58,7 @@ public class CustomNauseaConfig {
 
       PORTAL_MODIFIER = builder.comment(ConfigProp.PORTAL_MOD.comment)
           .translation(ConfigProp.PORTAL_MOD.translation)
-          .defineInRange(ConfigProp.PORTAL_MOD.path, 1.0d,
-              0.0d, 10.0d);
+          .defineInRange(ConfigProp.PORTAL_MOD.path, 1.0d, 0.0d, 10.0d);
 
       builder.pop();
     }
@@ -66,14 +67,14 @@ public class CustomNauseaConfig {
   }
 
   private enum ConfigCategories {
-    NAUSEA,
-    PORTAL
+    NAUSEA, PORTAL
   }
 
   private enum ConfigProp {
-    NAUSEA_MOD("nauseaModifier", "The strength of the Nausea effect"),
-    STUMBLING("stumbling", "Set to true to active stumbling movement when nauseous"),
-    PORTAL_MOD("portalModifier", "The strength of the portal distortion effect");
+    NAUSEA_MOD("nauseaModifier", "The strength of the Nausea effect"), STUMBLING("stumbling",
+        "Set to true to activate stumbling movement when nauseous"), PORTAL_MOD("portalModifier",
+        "The strength of the portal distortion effect"), ALWAYS_STUMBLING("alwaysStumbling",
+        "Set to true if stumbling movement should happen even while standing still when nauseous");
 
     final String path;
     final String translation;
