@@ -20,11 +20,16 @@
 package top.theillusivec4.customnausea;
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.FMLNetworkConstants;
+import org.apache.commons.lang3.tuple.Pair;
 
 
 @Mod(CustomNausea.MODID)
@@ -33,11 +38,22 @@ public class CustomNausea {
   public static final String MODID = "customnausea";
 
   public CustomNausea() {
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+    IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    eventBus.addListener(this::setupClient);
+    eventBus.addListener(this::config);
     ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CustomNauseaConfig.CONFIG_SPEC);
+    ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
+        () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
   }
 
   private void setupClient(final FMLClientSetupEvent evt) {
-    MinecraftForge.EVENT_BUS.register(new EventHandlerNausea());
+    MinecraftForge.EVENT_BUS.register(new CustomNauseaEventHandler());
+  }
+
+  private void config(final ModConfigEvent evt) {
+
+    if (evt.getConfig().getModId().equals(MODID)) {
+      CustomNauseaConfig.bake();
+    }
   }
 }

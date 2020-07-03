@@ -40,7 +40,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import top.theillusivec4.customnausea.CustomNauseaConfig.Stumbling;
 
-public class EventHandlerNausea {
+public class CustomNauseaEventHandler {
 
   private static final Random RAND = new Random();
 
@@ -90,7 +90,7 @@ public class EventHandlerNausea {
   }
 
   @SubscribeEvent
-  public void onClientTick(TickEvent.ClientTickEvent evt) {
+  public void tick(TickEvent.ClientTickEvent evt) {
     ClientPlayerEntity clientPlayer = Minecraft.getInstance().player;
 
     if (evt.phase != TickEvent.Phase.END || clientPlayer == null) {
@@ -103,9 +103,8 @@ public class EventHandlerNausea {
     if (inPortal == null) {
       return;
     }
-
-    double maxEffectTime = inPortal ? CustomNauseaConfig.PORTAL_MODIFIER.get()
-        : CustomNauseaConfig.NAUSEA_MODIFIER.get();
+    double maxEffectTime =
+        inPortal ? CustomNauseaConfig.portalModifier : CustomNauseaConfig.nauseaModifier;
     clientPlayer.timeInPortal = (float) Math.min(clientPlayer.timeInPortal, maxEffectTime);
     prevPortalCounter = portalCounter;
 
@@ -128,12 +127,12 @@ public class EventHandlerNausea {
   }
 
   @SubscribeEvent
-  public void onMovementInput(InputUpdateEvent evt) {
+  public void input(InputUpdateEvent evt) {
     MovementInput input = evt.getMovementInput();
     PlayerEntity player = evt.getPlayer();
 
-    if (CustomNauseaConfig.STUMBLING.get() == Stumbling.DISABLED
-        || player.getActivePotionEffect(Effects.NAUSEA) == null) {
+    if (CustomNauseaConfig.stumbling == Stumbling.DISABLED || !player
+        .isPotionActive(Effects.NAUSEA)) {
       return;
     }
 
@@ -144,7 +143,7 @@ public class EventHandlerNausea {
       stumbleStrafe = RAND.nextInt(3) - 1;
       stumbleForward = RAND.nextInt(3) - 1;
     }
-    boolean alwaysStumbling = CustomNauseaConfig.STUMBLING.get() == Stumbling.ADVANCED;
+    boolean alwaysStumbling = CustomNauseaConfig.stumbling == Stumbling.ADVANCED;
 
     if (alwaysStumbling || input.leftKeyDown || input.rightKeyDown) {
       input.moveForward += stumbleForward;
@@ -156,13 +155,12 @@ public class EventHandlerNausea {
   }
 
   @SubscribeEvent
-  public void onPortalRender(RenderGameOverlayEvent.Pre evt) {
+  public void renderPortal(RenderGameOverlayEvent.Pre evt) {
 
     if (evt.getType() != RenderGameOverlayEvent.ElementType.PORTAL
-        || CustomNauseaConfig.PORTAL_MODIFIER.get() == 1.0d) {
+        || CustomNauseaConfig.portalModifier == 1.0d) {
       return;
     }
-
     evt.setCanceled(true);
     float timeInPortal =
         prevPortalCounter + (portalCounter - prevPortalCounter) * evt.getPartialTicks();

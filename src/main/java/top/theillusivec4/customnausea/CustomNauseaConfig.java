@@ -20,69 +20,56 @@
 package top.theillusivec4.customnausea;
 
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class CustomNauseaConfig {
 
   static final ForgeConfigSpec CONFIG_SPEC;
-  static final DoubleValue NAUSEA_MODIFIER;
-  static final DoubleValue PORTAL_MODIFIER;
-  static final EnumValue<Stumbling> STUMBLING;
-
+  static final Config CONFIG;
   private static final String CONFIG_PREFIX = "gui." + CustomNausea.MODID + ".config.";
 
   static {
-    Builder builder = new Builder();
-
-    {
-      builder.push(ConfigCategories.NAUSEA.name());
-
-      NAUSEA_MODIFIER = builder.comment(ConfigProp.NAUSEA_MOD.comment)
-          .translation(ConfigProp.NAUSEA_MOD.translation)
-          .defineInRange(ConfigProp.NAUSEA_MOD.path, 1.0d, 0.0d, 10.0d);
-      STUMBLING = builder.comment(ConfigProp.STUMBLING.comment)
-          .translation(ConfigProp.STUMBLING.translation)
-          .defineEnum(ConfigProp.STUMBLING.path, Stumbling.DISABLED);
-
-      builder.pop();
-    }
-
-    {
-      builder.push(ConfigCategories.PORTAL.name());
-
-      PORTAL_MODIFIER = builder.comment(ConfigProp.PORTAL_MOD.comment)
-          .translation(ConfigProp.PORTAL_MOD.translation)
-          .defineInRange(ConfigProp.PORTAL_MOD.path, 1.0d, 0.0d, 10.0d);
-
-      builder.pop();
-    }
-
-    CONFIG_SPEC = builder.build();
+    final Pair<Config, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
+        .configure(Config::new);
+    CONFIG_SPEC = specPair.getRight();
+    CONFIG = specPair.getLeft();
   }
 
-  private enum ConfigCategories {
-    NAUSEA, PORTAL
+  public static double nauseaModifier;
+  public static double portalModifier;
+  public static Stumbling stumbling;
+
+  public static void bake() {
+    nauseaModifier = CONFIG.nauseaModifier.get();
+    portalModifier = CONFIG.portalModifier.get();
+    stumbling = CONFIG.stumbling.get();
+  }
+
+  public static class Config {
+
+    public final DoubleValue nauseaModifier;
+    public final DoubleValue portalModifier;
+    public final EnumValue<Stumbling> stumbling;
+
+    public Config(ForgeConfigSpec.Builder builder) {
+      nauseaModifier = builder.comment("A multiplier for the strength of the nausea effect")
+          .translation(CONFIG_PREFIX + "nauseaModifier")
+          .defineInRange("nauseaModifier", 1.0d, 0.0d, 10.0d);
+
+      portalModifier = builder
+          .comment("A multiplier for the strength of the portal distortion effect")
+          .translation(CONFIG_PREFIX + "portalModifier")
+          .defineInRange("portalModifier", 1.0d, 0.0d, 10.0d);
+
+      stumbling = builder.comment(
+          "NORMAL - Players stumble when moving\nADVANCED - Players stumble even when standing still")
+          .translation(CONFIG_PREFIX + "stumbling").defineEnum("stumbling", Stumbling.DISABLED);
+    }
   }
 
   enum Stumbling {
     DISABLED, NORMAL, ADVANCED
-  }
-
-  private enum ConfigProp {
-    NAUSEA_MOD("nauseaModifier", "The strength of the Nausea effect"), STUMBLING("stumbling",
-        "NORMAL - Players stumble when moving, ADVANCED - Players stumble even when standing still"), PORTAL_MOD(
-        "portalModifier", "The strength of the portal distortion effect");
-
-    final String path;
-    final String translation;
-    final String comment;
-
-    ConfigProp(String path, String comment) {
-      this.path = path;
-      this.translation = CONFIG_PREFIX + path;
-      this.comment = comment;
-    }
   }
 }
