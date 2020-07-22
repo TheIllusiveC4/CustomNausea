@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "customnausea",
+  "version": "${version}",
+  "name": "Custom Nausea",
+  "description": "Allows disabling, replacing, or modifying the strength of the Nausea effect.",
+  "authors": ["C4"],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/custom-nausea-fabric",
+    "sources": "https://github.com/TheIllusiveC4/CustomNausea",
+    "issues": "https://github.com/TheIllusiveC4/CustomNausea/issues"
+  },
+  "license": "LGPLv3.0",
+  "icon": "assets/customnausea/customnausea_icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "top.theillusivec4.customnausea.impl.CustomNauseaMod"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "customnausea.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "minecraft": "1.16.x"
+  }
+}
